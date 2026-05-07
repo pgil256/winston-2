@@ -49,7 +49,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 - [x] Space environment
 - [x] Beach environment (with animated ocean)
 - [x] Lab environment
-- [ ] Environment picker dropdown, swaps cleanly without leaking lights/fog
+- [x] Environment picker dropdown, swaps cleanly without leaking lights/fog
 
 ## Polish
 
