@@ -3,6 +3,19 @@ import { OrbitControls } from '@react-three/drei';
 import { Leva } from 'leva';
 import { Scene } from './scene/Scene';
 import { ControlPanel } from './ui/ControlPanel';
+import { useAppStore } from './store/appStore';
+
+function BottomLeftCorner(): JSX.Element {
+  const resetAll = useAppStore((s) => s.resetAll);
+  return (
+    <div className="corner-bl">
+      <span className="wordmark">Winston 2.0</span>
+      <button className="reset-btn" type="button" onClick={resetAll}>
+        Reset
+      </button>
+    </div>
+  );
+}
 
 export function App(): JSX.Element {
   return (
@@ -24,7 +37,7 @@ export function App(): JSX.Element {
       </Canvas>
       <Leva collapsed={false} />
       <ControlPanel />
-      <div className="wordmark">Winston 2.0</div>
+      <BottomLeftCorner />
     </div>
   );
 }

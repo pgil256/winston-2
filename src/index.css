@@ -20,14 +20,42 @@ body,
   position: relative;
 }
 
-.wordmark {
+.corner-bl {
   position: absolute;
   bottom: 12px;
   left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wordmark {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: #d8d8d8;
   pointer-events: none;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.reset-btn {
+  background: rgba(20, 20, 22, 0.7);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.reset-btn:hover {
+  background: rgba(40, 40, 44, 0.85);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.reset-btn:active {
+  background: rgba(10, 10, 12, 0.9);
 }
