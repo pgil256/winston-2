@@ -37,7 +37,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 - [x] Build hat accessories (top, party, witch, cowboy) as procedural components
 - [x] Build neck accessories (bowtie, collar+bell, scarf)
 - [x] Build body accessories (sweater, cape, tutu)
-- [ ] Build feet accessories (socks ×4, boots ×4)
+- [x] Build feet accessories (socks ×4, boots ×4)
 - [ ] Wire 4 dropdowns in leva, mount selected accessory to its anchor
 - [ ] Verify accessories follow bones when ferret is posed
 
