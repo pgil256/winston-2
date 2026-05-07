@@ -6,6 +6,8 @@ import type { BoneId } from './types';
 import { useAppStore } from '../store/appStore';
 import { getBoneColor } from '../ferret/palette';
 import { getFurNormalMap } from '../ferret/furNormalMap';
+import { getSlotForBone } from '../accessories/anchors';
+import { AccessoryAt } from '../accessories/AccessoryAt';
 
 const FUR_NORMAL_SCALE = new THREE.Vector2(0.35, 0.35);
 
@@ -24,9 +26,12 @@ export function Bone({ boneId }: { boneId: BoneId }): JSX.Element {
 
   const offset = def.offset as [number, number, number];
 
+  const slot = getSlotForBone(boneId);
+
   return (
     <group ref={groupRef} position={offset}>
       <BonePrimitiveMesh primitive={def.primitive} color={getBoneColor(boneId)} />
+      {slot && <AccessoryAt slot={slot} bone={boneId} />}
       {SKELETON_CHILDREN[boneId].map((childId) => (
         <Bone key={childId} boneId={childId} />
       ))}

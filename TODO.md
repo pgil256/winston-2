@@ -33,7 +33,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 ## Dress-up
 
-- [ ] Define accessory anchor refs on the rig (head, neck, body, feet bones expose refs)
+- [x] Define accessory anchor refs on the rig (head, neck, body, feet bones expose refs)
 - [ ] Build hat accessories (top, party, witch, cowboy) as procedural components
 - [ ] Build neck accessories (bowtie, collar+bell, scarf)
 - [ ] Build body accessories (sweater, cape, tutu)
