@@ -3,6 +3,7 @@ import type { BoneId } from '../rig/types';
 import type { AccessorySlot } from './anchors';
 import { HAT_COMPONENTS } from './hats';
 import { NECK_COMPONENTS } from './neck';
+import { BODY_COMPONENTS } from './body';
 
 interface Props {
   slot: AccessorySlot;
@@ -20,6 +21,10 @@ export function AccessoryAt({ slot }: Props): JSX.Element | null {
   }
   if (slot === 'neck') {
     const Comp = NECK_COMPONENTS[selection as keyof typeof NECK_COMPONENTS];
+    return Comp ? <Comp /> : null;
+  }
+  if (slot === 'body') {
+    const Comp = BODY_COMPONENTS[selection as keyof typeof BODY_COMPONENTS];
     return Comp ? <Comp /> : null;
   }
 
