@@ -26,7 +26,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 ## Posing
 
-- [ ] Implement preset definitions (`src/rig/presets.ts`) for T-pose, sit, stand, pounce, sleep, war-dance
+- [x] Implement preset definitions (`src/rig/presets.ts`) for T-pose, sit, stand, pounce, sleep, war-dance
 - [ ] Add preset buttons to leva, click → 400ms lerp to target rotations
 - [ ] Add manual sliders to leva (folder per bone group), wired to store
 - [ ] Verify sliders update when a preset is selected (two-way binding via store)
