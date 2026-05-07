@@ -39,7 +39,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 - [x] Build body accessories (sweater, cape, tutu)
 - [x] Build feet accessories (socks ×4, boots ×4)
 - [x] Wire 4 dropdowns in leva, mount selected accessory to its anchor
-- [ ] Verify accessories follow bones when ferret is posed
+- [x] Verify accessories follow bones when ferret is posed
 
 ## Environments
 
