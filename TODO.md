@@ -35,7 +35,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 - [x] Define accessory anchor refs on the rig (head, neck, body, feet bones expose refs)
 - [x] Build hat accessories (top, party, witch, cowboy) as procedural components
-- [ ] Build neck accessories (bowtie, collar+bell, scarf)
+- [x] Build neck accessories (bowtie, collar+bell, scarf)
 - [ ] Build body accessories (sweater, cape, tutu)
 - [ ] Build feet accessories (socks ×4, boots ×4)
 - [ ] Wire 4 dropdowns in leva, mount selected accessory to its anchor

@@ -2,6 +2,7 @@ import { useAppStore } from '../store/appStore';
 import type { BoneId } from '../rig/types';
 import type { AccessorySlot } from './anchors';
 import { HAT_COMPONENTS } from './hats';
+import { NECK_COMPONENTS } from './neck';
 
 interface Props {
   slot: AccessorySlot;
@@ -15,6 +16,10 @@ export function AccessoryAt({ slot }: Props): JSX.Element | null {
 
   if (slot === 'head') {
     const Comp = HAT_COMPONENTS[selection as keyof typeof HAT_COMPONENTS];
+    return Comp ? <Comp /> : null;
+  }
+  if (slot === 'neck') {
+    const Comp = NECK_COMPONENTS[selection as keyof typeof NECK_COMPONENTS];
     return Comp ? <Comp /> : null;
   }
 
