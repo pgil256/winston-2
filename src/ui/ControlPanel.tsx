@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { button, folder, useControls } from 'leva';
 import { useAppStore } from '../store/appStore';
 import { ENVIRONMENT_IDS, ENVIRONMENT_LABELS } from '../environments/types';
@@ -11,7 +12,7 @@ import { PRESET_IDS, PRESET_LABELS, getPresetPose } from '../rig/presets';
 import { startPoseLerp, cancelPoseLerp } from '../rig/poseAnimation';
 import { BONE_GROUPS } from '../rig/groups';
 import { CONSTRAINTS } from '../rig/constraints';
-import type { BoneId, EulerXYZ } from '../rig/types';
+import type { BoneId, EulerXYZ, Pose } from '../rig/types';
 
 const AXES = [0, 1, 2] as const;
 const AXIS_LABELS = ['x', 'y', 'z'] as const;
@@ -66,7 +67,20 @@ export function ControlPanel(): null {
   }
   useControls('Pose Presets', presetButtons);
 
-  useControls('Manual Pose', buildPoseFolders());
+  const poseControls = useControls('Manual Pose', () => buildPoseFolders()) as unknown as
+    | Record<string, number>
+    | [Record<string, number>, (values: Record<string, number>) => void];
+  const setPoseControls = Array.isArray(poseControls) ? poseControls[1] : null;
+
+  useEffect(() => {
+    if (!setPoseControls) return undefined;
+    let last = useAppStore.getState().pose;
+    return useAppStore.subscribe((state) => {
+      if (state.pose === last) return;
+      last = state.pose;
+      setPoseControls(poseToSliderValues(state.pose));
+    });
+  }, [setPoseControls]);
 
   useControls('Dress Up', {
     head: {
@@ -114,5 +128,17 @@ export function ControlPanel(): null {
 function optionMap<T extends string>(values: readonly T[]): Record<string, T> {
   const out: Record<string, T> = {};
   for (const v of values) out[v] = v;
+  return out;
+}
+
+function poseToSliderValues(pose: Pose): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const group of BONE_GROUPS) {
+    for (const bone of group.bones) {
+      for (const axis of AXES) {
+        out[`${bone} ${AXIS_LABELS[axis]}`] = pose[bone][axis];
+      }
+    }
+  }
   return out;
 }
