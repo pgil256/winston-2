@@ -15,7 +15,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 - [x] Define bone hierarchy as a TS data structure (`src/rig/skeleton.ts`)
 - [x] Build `<Bone>` component that renders its primitive + recursively renders children, applying rotation from store
 - [x] Render full skeleton in T-pose with debug-colored primitives
-- [ ] Add per-bone rotation constraints from SPEC.md, clamp on write
+- [x] Add per-bone rotation constraints from SPEC.md, clamp on write
 
 ## Ferret geometry
 

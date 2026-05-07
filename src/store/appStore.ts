@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { BoneId, EulerXYZ, Pose } from '../rig/types';
-import { zeroPose } from '../rig/types';
+import { BONE_IDS, zeroPose } from '../rig/types';
+import { clampRotation } from '../rig/constraints';
 import type { Accessories, BodyId, FeetId, HatId, NeckId } from '../accessories/types';
 import { defaultAccessories } from '../accessories/types';
 import type { EnvironmentId } from '../environments/types';
@@ -31,9 +32,13 @@ export const useAppStore = create<AppState>((set) => ({
   environment: 'studio',
 
   setBoneRotation: (id, rotation) =>
-    set((state) => ({ pose: { ...state.pose, [id]: rotation } })),
+    set((state) => ({ pose: { ...state.pose, [id]: clampRotation(id, rotation) } })),
 
-  setPose: (pose) => set({ pose }),
+  setPose: (pose) => {
+    const clamped = {} as Record<BoneId, EulerXYZ>;
+    for (const id of BONE_IDS) clamped[id] = clampRotation(id, pose[id]);
+    set({ pose: clamped });
+  },
 
   resetPose: () => set({ pose: zeroPose() }),
 

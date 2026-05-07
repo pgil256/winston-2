@@ -1,6 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { useAppStore } from './appStore';
 import { BONE_IDS } from '../rig/types';
+import { CONSTRAINTS } from '../rig/constraints';
 
 describe('useAppStore', () => {
   beforeEach(() => {
@@ -44,6 +45,23 @@ describe('useAppStore', () => {
   it('setEnvironment switches the active environment', () => {
     useAppStore.getState().setEnvironment('forest');
     expect(useAppStore.getState().environment).toBe('forest');
+  });
+
+  it('setBoneRotation clamps to constraint range', () => {
+    useAppStore.getState().setBoneRotation('head', [10, 10, 10]);
+    const headRot = useAppStore.getState().pose.head;
+    expect(headRot[0]).toBe(CONSTRAINTS.head.x.max);
+    expect(headRot[1]).toBe(CONSTRAINTS.head.y.max);
+    expect(headRot[2]).toBe(CONSTRAINTS.head.z.max);
+  });
+
+  it('setPose clamps every bone in the pose', () => {
+    const big = {} as Record<string, [number, number, number]>;
+    for (const id of BONE_IDS) big[id] = [10, 10, 10];
+    useAppStore.getState().setPose(big as never);
+    const { pose } = useAppStore.getState();
+    expect(pose.snout[0]).toBe(CONSTRAINTS.snout.x.max);
+    expect(pose.shin_L[0]).toBe(CONSTRAINTS.shin_L.x.max);
   });
 
   it('resetAll restores defaults', () => {
