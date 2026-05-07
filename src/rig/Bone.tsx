@@ -5,6 +5,9 @@ import { SKELETON, SKELETON_CHILDREN, type BonePrimitive } from './skeleton';
 import type { BoneId } from './types';
 import { useAppStore } from '../store/appStore';
 import { getBoneColor } from '../ferret/palette';
+import { getFurNormalMap } from '../ferret/furNormalMap';
+
+const FUR_NORMAL_SCALE = new THREE.Vector2(0.35, 0.35);
 
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
@@ -57,11 +60,18 @@ function BonePrimitiveMesh({ primitive, color }: PrimitiveMeshProps): JSX.Elemen
 
   if (primitive.shape === 'none' || !transform) return null;
 
+  const normalMap = getFurNormalMap();
+
   if (primitive.shape === 'sphere') {
     return (
       <mesh position={transform.position} castShadow>
         <sphereGeometry args={[primitive.radius, 24, 18]} />
-        <meshStandardMaterial color={color} roughness={0.82} />
+        <meshStandardMaterial
+          color={color}
+          roughness={0.85}
+          normalMap={normalMap}
+          normalScale={FUR_NORMAL_SCALE}
+        />
       </mesh>
     );
   }
@@ -71,7 +81,12 @@ function BonePrimitiveMesh({ primitive, color }: PrimitiveMeshProps): JSX.Elemen
     return (
       <mesh position={transform.position} quaternion={transform.quaternion} castShadow>
         <capsuleGeometry args={[primitive.radius, cylLength, 8, 16]} />
-        <meshStandardMaterial color={color} roughness={0.82} />
+        <meshStandardMaterial
+          color={color}
+          roughness={0.85}
+          normalMap={normalMap}
+          normalScale={FUR_NORMAL_SCALE}
+        />
       </mesh>
     );
   }
@@ -80,7 +95,12 @@ function BonePrimitiveMesh({ primitive, color }: PrimitiveMeshProps): JSX.Elemen
   return (
     <mesh position={transform.position} quaternion={transform.quaternion} castShadow>
       <coneGeometry args={[primitive.radius, primitive.length, 20]} />
-      <meshStandardMaterial color={color} roughness={0.82} />
+      <meshStandardMaterial
+        color={color}
+        roughness={0.85}
+        normalMap={normalMap}
+        normalScale={FUR_NORMAL_SCALE}
+      />
     </mesh>
   );
 }

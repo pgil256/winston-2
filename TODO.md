@@ -21,7 +21,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 - [x] Replace debug primitives with proper shapes (capsules for body/limbs, spheres for joints, cones for snout/ears)
 - [x] Apply sable color palette via per-part materials
-- [ ] Add subtle noise normal map for fur fakery
+- [x] Add subtle noise normal map for fur fakery
 - [ ] Tune proportions so it reads as "ferret" not "weasel-snake-thing"
 
 ## Posing
