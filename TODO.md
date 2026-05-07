@@ -7,7 +7,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 - [x] Scaffold Vite + React + TS project, strict mode, install deps
 - [x] Set up app shell: full-viewport Canvas, OrbitControls, ground plane, ambient + directional light
-- [ ] Add zustand store with `pose`, `accessories`, `environment` slices
+- [x] Add zustand store with `pose`, `accessories`, `environment` slices
 - [ ] Add leva panel with placeholder folders matching SPEC.md UI Layout
 
 ## Rig
