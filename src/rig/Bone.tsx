@@ -61,8 +61,8 @@ function BonePrimitiveMesh({ primitive, debugColor }: PrimitiveMeshProps): JSX.E
   if (primitive.shape === 'sphere') {
     return (
       <mesh position={transform.position} castShadow>
-        <sphereGeometry args={[primitive.radius, 16, 12]} />
-        <meshStandardMaterial color={color} roughness={0.85} />
+        <sphereGeometry args={[primitive.radius, 24, 18]} />
+        <meshStandardMaterial color={color} roughness={0.82} />
       </mesh>
     );
   }
@@ -71,8 +71,8 @@ function BonePrimitiveMesh({ primitive, debugColor }: PrimitiveMeshProps): JSX.E
     const cylLength = Math.max(primitive.length - 2 * primitive.radius, 0.0001);
     return (
       <mesh position={transform.position} quaternion={transform.quaternion} castShadow>
-        <capsuleGeometry args={[primitive.radius, cylLength, 4, 12]} />
-        <meshStandardMaterial color={color} roughness={0.85} />
+        <capsuleGeometry args={[primitive.radius, cylLength, 8, 16]} />
+        <meshStandardMaterial color={color} roughness={0.82} />
       </mesh>
     );
   }
@@ -80,8 +80,8 @@ function BonePrimitiveMesh({ primitive, debugColor }: PrimitiveMeshProps): JSX.E
   // cone
   return (
     <mesh position={transform.position} quaternion={transform.quaternion} castShadow>
-      <coneGeometry args={[primitive.radius, primitive.length, 16]} />
-      <meshStandardMaterial color={color} roughness={0.85} />
+      <coneGeometry args={[primitive.radius, primitive.length, 20]} />
+      <meshStandardMaterial color={color} roughness={0.82} />
     </mesh>
   );
 }
