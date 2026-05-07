@@ -46,7 +46,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 - [x] Studio environment (default)
 - [x] Bedroom environment
 - [x] Forest environment
-- [ ] Space environment
+- [x] Space environment
 - [ ] Beach environment (with animated ocean)
 - [ ] Lab environment
 - [ ] Environment picker dropdown, swaps cleanly without leaking lights/fog
