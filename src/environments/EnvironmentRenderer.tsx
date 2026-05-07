@@ -5,13 +5,15 @@ import { Bedroom } from './Bedroom';
 import { Forest } from './Forest';
 import { Space } from './Space';
 import { Beach } from './Beach';
+import { Lab } from './Lab';
 
-const ENV_COMPONENTS: Partial<Record<EnvironmentId, () => JSX.Element>> = {
+const ENV_COMPONENTS: Record<EnvironmentId, () => JSX.Element> = {
   studio: Studio,
   bedroom: Bedroom,
   forest: Forest,
   space: Space,
   beach: Beach,
+  lab: Lab,
 };
 
 export function EnvironmentRenderer(): JSX.Element {

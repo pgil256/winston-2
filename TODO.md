@@ -48,7 +48,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 - [x] Forest environment
 - [x] Space environment
 - [x] Beach environment (with animated ocean)
-- [ ] Lab environment
+- [x] Lab environment
 - [ ] Environment picker dropdown, swaps cleanly without leaking lights/fog
 
 ## Polish
