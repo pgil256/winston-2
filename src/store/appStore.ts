@@ -5,6 +5,7 @@ import { clampRotation } from '../rig/constraints';
 import type { Accessories, BodyId, FeetId, HatId, NeckId } from '../accessories/types';
 import { defaultAccessories } from '../accessories/types';
 import type { EnvironmentId } from '../environments/types';
+import type { Look } from '../storage/looks';
 
 export interface AppState {
   pose: Pose;
@@ -22,6 +23,8 @@ export interface AppState {
   resetAccessories: () => void;
 
   setEnvironment: (id: EnvironmentId) => void;
+
+  applyLook: (look: Look) => void;
 
   resetAll: () => void;
 }
@@ -50,6 +53,16 @@ export const useAppStore = create<AppState>((set) => ({
   resetAccessories: () => set({ accessories: defaultAccessories() }),
 
   setEnvironment: (id) => set({ environment: id }),
+
+  applyLook: (look) => {
+    const clamped = {} as Pose;
+    for (const id of BONE_IDS) clamped[id] = clampRotation(id, look.pose[id]);
+    set({
+      pose: clamped,
+      accessories: { ...look.accessories },
+      environment: look.environment,
+    });
+  },
 
   resetAll: () =>
     set({

@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { button, folder, useControls } from 'leva';
+import { saveLook, loadLook } from '../storage/looks';
 import { useAppStore } from '../store/appStore';
 import { ENVIRONMENT_IDS, ENVIRONMENT_LABELS } from '../environments/types';
 import {
@@ -114,12 +115,27 @@ export function ControlPanel(): null {
     },
   });
 
+  const lookNameRef = useRef('my-look');
   useControls('Save / Load Look', {
-    name: { value: 'my-look' },
+    name: {
+      value: 'my-look',
+      onChange: (v: string) => {
+        lookNameRef.current = v;
+      },
+    },
     Save: button(() => {
-      // wired in a later task
+      const s = useAppStore.getState();
+      saveLook(lookNameRef.current, {
+        version: 1,
+        pose: s.pose,
+        accessories: s.accessories,
+        environment: s.environment,
+      });
     }),
-    Load: button(() => {}),
+    Load: button(() => {
+      const look = loadLook(lookNameRef.current);
+      if (look) useAppStore.getState().applyLook(look);
+    }),
     Reset: button(() => resetAll()),
   });
 

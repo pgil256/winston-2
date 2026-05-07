@@ -53,7 +53,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 ## Polish
 
-- [ ] Save/load named looks to localStorage (pose + accessories + env)
+- [x] Save/load named looks to localStorage (pose + accessories + env)
 - [ ] Reset button restores T-pose / no accessories / studio
 - [ ] "Winston 2.0" wordmark bottom-left
 - [ ] Clamp OrbitControls so camera can't go under the floor
