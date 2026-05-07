@@ -8,7 +8,45 @@ import {
   FEET_OPTIONS,
 } from '../accessories/types';
 import { PRESET_IDS, PRESET_LABELS, getPresetPose } from '../rig/presets';
-import { startPoseLerp } from '../rig/poseAnimation';
+import { startPoseLerp, cancelPoseLerp } from '../rig/poseAnimation';
+import { BONE_GROUPS } from '../rig/groups';
+import { CONSTRAINTS } from '../rig/constraints';
+import type { BoneId, EulerXYZ } from '../rig/types';
+
+const AXES = [0, 1, 2] as const;
+const AXIS_LABELS = ['x', 'y', 'z'] as const;
+
+type LevaSchema = Parameters<typeof folder>[0];
+
+function buildPoseFolders(): LevaSchema {
+  const out: Record<string, ReturnType<typeof folder>> = {};
+  for (const group of BONE_GROUPS) {
+    const schema: Record<string, unknown> = {};
+    for (const bone of group.bones) {
+      const c = CONSTRAINTS[bone];
+      const ranges = [c.x, c.y, c.z];
+      for (const axis of AXES) {
+        const range = ranges[axis]!;
+        const key = `${bone} ${AXIS_LABELS[axis]}`;
+        schema[key] = {
+          value: 0,
+          min: range.min,
+          max: range.max,
+          step: 0.01,
+          onChange: (v: number) => {
+            cancelPoseLerp();
+            const current = useAppStore.getState().pose[bone];
+            const next: [number, number, number] = [current[0], current[1], current[2]];
+            next[axis] = v;
+            useAppStore.getState().setBoneRotation(bone as BoneId, next as EulerXYZ);
+          },
+        };
+      }
+    }
+    out[group.label] = folder(schema as LevaSchema, { collapsed: true });
+  }
+  return out as LevaSchema;
+}
 
 const envOptions = Object.fromEntries(
   ENVIRONMENT_IDS.map((id) => [ENVIRONMENT_LABELS[id], id]),
@@ -28,13 +66,7 @@ export function ControlPanel(): null {
   }
   useControls('Pose Presets', presetButtons);
 
-  useControls('Manual Pose', {
-    Head: folder({}, { collapsed: true }),
-    Spine: folder({}, { collapsed: true }),
-    Arms: folder({}, { collapsed: true }),
-    Legs: folder({}, { collapsed: true }),
-    Tail: folder({}, { collapsed: true }),
-  });
+  useControls('Manual Pose', buildPoseFolders());
 
   useControls('Dress Up', {
     head: {
