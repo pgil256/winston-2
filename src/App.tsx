@@ -9,7 +9,7 @@ export function App(): JSX.Element {
     <div className="app-root">
       <Canvas
         shadows
-        camera={{ position: [3, 2, 4], fov: 50, near: 0.1, far: 100 }}
+        camera={{ position: [1.4, 0.7, 1.6], fov: 45, near: 0.05, far: 50 }}
         gl={{ antialias: true }}
       >
         <color attach="background" args={['#1a1a1a']} />
@@ -17,10 +17,10 @@ export function App(): JSX.Element {
         <OrbitControls
           enableDamping
           dampingFactor={0.08}
-          minDistance={1.5}
-          maxDistance={15}
+          minDistance={0.6}
+          maxDistance={6}
           maxPolarAngle={Math.PI / 2 - 0.05}
-          target={[0, 0.5, 0]}
+          target={[0, 0.18, 0.1]}
         />
       </Canvas>
       <Leva collapsed={false} />
