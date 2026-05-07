@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { SKELETON, SKELETON_CHILDREN, type BonePrimitive } from './skeleton';
 import type { BoneId } from './types';
 import { useAppStore } from '../store/appStore';
+import { getBoneColor } from '../ferret/palette';
 
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
@@ -22,7 +23,7 @@ export function Bone({ boneId }: { boneId: BoneId }): JSX.Element {
 
   return (
     <group ref={groupRef} position={offset}>
-      <BonePrimitiveMesh primitive={def.primitive} debugColor={def.debugColor} />
+      <BonePrimitiveMesh primitive={def.primitive} color={getBoneColor(boneId)} />
       {SKELETON_CHILDREN[boneId].map((childId) => (
         <Bone key={childId} boneId={childId} />
       ))}
@@ -32,10 +33,10 @@ export function Bone({ boneId }: { boneId: BoneId }): JSX.Element {
 
 interface PrimitiveMeshProps {
   primitive: BonePrimitive;
-  debugColor: string | undefined;
+  color: string;
 }
 
-function BonePrimitiveMesh({ primitive, debugColor }: PrimitiveMeshProps): JSX.Element | null {
+function BonePrimitiveMesh({ primitive, color }: PrimitiveMeshProps): JSX.Element | null {
   const transform = useMemo(() => {
     if (primitive.shape === 'none') return null;
     if (primitive.shape === 'sphere') {
@@ -55,8 +56,6 @@ function BonePrimitiveMesh({ primitive, debugColor }: PrimitiveMeshProps): JSX.E
   }, [primitive]);
 
   if (primitive.shape === 'none' || !transform) return null;
-
-  const color = debugColor ?? '#ff00ff';
 
   if (primitive.shape === 'sphere') {
     return (

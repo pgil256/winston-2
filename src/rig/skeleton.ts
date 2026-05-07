@@ -18,9 +18,6 @@ export interface BoneDef {
   // Offset from parent bone's origin, expressed in parent's local frame.
   readonly offset: Vec3;
   readonly primitive: BonePrimitive;
-  // Debug color used for the placeholder primitive view (replaced when proper
-  // materials are wired in the geometry pass).
-  readonly debugColor?: string;
 }
 
 // Bone-local frames are world-aligned at zero rotation. T-pose has arms extending
@@ -38,7 +35,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'root',
     offset: [0, 0.3, 0],
     primitive: { shape: 'sphere', radius: 0.07 },
-    debugColor: '#c46a4a',
   },
 
   spine_lower: {
@@ -46,7 +42,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'pelvis',
     offset: [0, 0.04, 0.05],
     primitive: { shape: 'capsule', length: 0.25, radius: 0.07, direction: [0, 0, 1] },
-    debugColor: '#b76040',
   },
 
   spine_upper: {
@@ -54,7 +49,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'spine_lower',
     offset: [0, 0, 0.25],
     primitive: { shape: 'capsule', length: 0.25, radius: 0.07, direction: [0, 0, 1] },
-    debugColor: '#aa583a',
   },
 
   neck: {
@@ -62,7 +56,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'spine_upper',
     offset: [0, 0.04, 0.25],
     primitive: { shape: 'capsule', length: 0.08, radius: 0.05, direction: [0, 0, 1] },
-    debugColor: '#9c4f33',
   },
 
   head: {
@@ -70,7 +63,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'neck',
     offset: [0, 0.02, 0.08],
     primitive: { shape: 'sphere', radius: 0.09, offset: [0, 0, 0.05] },
-    debugColor: '#8b3f25',
   },
 
   ear_L: {
@@ -78,7 +70,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'head',
     offset: [0.06, 0.08, 0.02],
     primitive: { shape: 'cone', length: 0.05, radius: 0.025, direction: [0, 1, 0] },
-    debugColor: '#6e2e18',
   },
 
   ear_R: {
@@ -86,7 +77,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'head',
     offset: [-0.06, 0.08, 0.02],
     primitive: { shape: 'cone', length: 0.05, radius: 0.025, direction: [0, 1, 0] },
-    debugColor: '#6e2e18',
   },
 
   snout: {
@@ -94,7 +84,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'head',
     offset: [0, -0.02, 0.1],
     primitive: { shape: 'cone', length: 0.07, radius: 0.04, direction: [0, 0, 1] },
-    debugColor: '#5a2812',
   },
 
   shoulder_L: {
@@ -102,7 +91,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'spine_upper',
     offset: [0.08, 0, 0.2],
     primitive: { shape: 'sphere', radius: 0.04 },
-    debugColor: '#9c4f33',
   },
 
   upper_arm_L: {
@@ -110,7 +98,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'shoulder_L',
     offset: [0, 0, 0],
     primitive: { shape: 'capsule', length: 0.16, radius: 0.035, direction: [1, 0, 0] },
-    debugColor: '#a85b3e',
   },
 
   forearm_L: {
@@ -118,7 +105,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'upper_arm_L',
     offset: [0.16, 0, 0],
     primitive: { shape: 'capsule', length: 0.14, radius: 0.03, direction: [1, 0, 0] },
-    debugColor: '#a85b3e',
   },
 
   paw_L: {
@@ -126,7 +112,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'forearm_L',
     offset: [0.14, 0, 0],
     primitive: { shape: 'sphere', radius: 0.035 },
-    debugColor: '#5a2812',
   },
 
   shoulder_R: {
@@ -134,7 +119,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'spine_upper',
     offset: [-0.08, 0, 0.2],
     primitive: { shape: 'sphere', radius: 0.04 },
-    debugColor: '#9c4f33',
   },
 
   upper_arm_R: {
@@ -142,7 +126,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'shoulder_R',
     offset: [0, 0, 0],
     primitive: { shape: 'capsule', length: 0.16, radius: 0.035, direction: [-1, 0, 0] },
-    debugColor: '#a85b3e',
   },
 
   forearm_R: {
@@ -150,7 +133,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'upper_arm_R',
     offset: [-0.16, 0, 0],
     primitive: { shape: 'capsule', length: 0.14, radius: 0.03, direction: [-1, 0, 0] },
-    debugColor: '#a85b3e',
   },
 
   paw_R: {
@@ -158,7 +140,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'forearm_R',
     offset: [-0.14, 0, 0],
     primitive: { shape: 'sphere', radius: 0.035 },
-    debugColor: '#5a2812',
   },
 
   hip_L: {
@@ -166,7 +147,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'pelvis',
     offset: [0.06, -0.02, -0.04],
     primitive: { shape: 'sphere', radius: 0.045 },
-    debugColor: '#9c4f33',
   },
 
   thigh_L: {
@@ -174,7 +154,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'hip_L',
     offset: [0, 0, 0],
     primitive: { shape: 'capsule', length: 0.14, radius: 0.04, direction: [0, -1, 0] },
-    debugColor: '#a85b3e',
   },
 
   shin_L: {
@@ -182,7 +161,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'thigh_L',
     offset: [0, -0.14, 0],
     primitive: { shape: 'capsule', length: 0.13, radius: 0.034, direction: [0, -1, 0] },
-    debugColor: '#a85b3e',
   },
 
   foot_L: {
@@ -190,7 +168,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'shin_L',
     offset: [0, -0.13, 0],
     primitive: { shape: 'capsule', length: 0.07, radius: 0.03, direction: [0, 0, 1] },
-    debugColor: '#5a2812',
   },
 
   hip_R: {
@@ -198,7 +175,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'pelvis',
     offset: [-0.06, -0.02, -0.04],
     primitive: { shape: 'sphere', radius: 0.045 },
-    debugColor: '#9c4f33',
   },
 
   thigh_R: {
@@ -206,7 +182,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'hip_R',
     offset: [0, 0, 0],
     primitive: { shape: 'capsule', length: 0.14, radius: 0.04, direction: [0, -1, 0] },
-    debugColor: '#a85b3e',
   },
 
   shin_R: {
@@ -214,7 +189,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'thigh_R',
     offset: [0, -0.14, 0],
     primitive: { shape: 'capsule', length: 0.13, radius: 0.034, direction: [0, -1, 0] },
-    debugColor: '#a85b3e',
   },
 
   foot_R: {
@@ -222,7 +196,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'shin_R',
     offset: [0, -0.13, 0],
     primitive: { shape: 'capsule', length: 0.07, radius: 0.03, direction: [0, 0, 1] },
-    debugColor: '#5a2812',
   },
 
   tail_1: {
@@ -230,7 +203,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'pelvis',
     offset: [0, 0.04, -0.06],
     primitive: { shape: 'capsule', length: 0.16, radius: 0.05, direction: [0, 0, -1] },
-    debugColor: '#a85b3e',
   },
 
   tail_2: {
@@ -238,7 +210,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'tail_1',
     offset: [0, 0, -0.16],
     primitive: { shape: 'capsule', length: 0.14, radius: 0.04, direction: [0, 0, -1] },
-    debugColor: '#a85b3e',
   },
 
   tail_3: {
@@ -246,7 +217,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'tail_2',
     offset: [0, 0, -0.14],
     primitive: { shape: 'capsule', length: 0.12, radius: 0.03, direction: [0, 0, -1] },
-    debugColor: '#a85b3e',
   },
 
   tail_4: {
@@ -254,7 +224,6 @@ export const SKELETON: Readonly<Record<BoneId, BoneDef>> = {
     parent: 'tail_3',
     offset: [0, 0, -0.12],
     primitive: { shape: 'capsule', length: 0.1, radius: 0.022, direction: [0, 0, -1] },
-    debugColor: '#5a2812',
   },
 };
 
