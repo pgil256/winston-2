@@ -13,6 +13,7 @@ import { startPoseLerp, cancelPoseLerp } from '../rig/poseAnimation';
 import { BONE_GROUPS } from '../rig/groups';
 import { CONSTRAINTS } from '../rig/constraints';
 import type { BoneId, EulerXYZ, Pose } from '../rig/types';
+import type { BodyId, FeetId, HatId, NeckId } from '../accessories/types';
 
 const AXES = [0, 1, 2] as const;
 const AXIS_LABELS = ['x', 'y', 'z'] as const;
@@ -85,23 +86,23 @@ export function ControlPanel(): null {
   useControls('Dress Up', {
     head: {
       options: optionMap(HAT_OPTIONS),
-      value: 'none',
-      onChange: (v: string) => setHat(v as never),
+      value: 'none' as HatId,
+      onChange: (v: HatId) => setHat(v),
     },
     neck: {
       options: optionMap(NECK_OPTIONS),
-      value: 'none',
-      onChange: (v: string) => setNeck(v as never),
+      value: 'none' as NeckId,
+      onChange: (v: NeckId) => setNeck(v),
     },
     body: {
       options: optionMap(BODY_OPTIONS),
-      value: 'none',
-      onChange: (v: string) => setBody(v as never),
+      value: 'none' as BodyId,
+      onChange: (v: BodyId) => setBody(v),
     },
     feet: {
       options: optionMap(FEET_OPTIONS),
-      value: 'none',
-      onChange: (v: string) => setFeet(v as never),
+      value: 'none' as FeetId,
+      onChange: (v: FeetId) => setFeet(v),
     },
   });
 
