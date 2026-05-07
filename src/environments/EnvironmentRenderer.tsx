@@ -2,10 +2,12 @@ import { useAppStore } from '../store/appStore';
 import type { EnvironmentId } from './types';
 import { Studio } from './Studio';
 import { Bedroom } from './Bedroom';
+import { Forest } from './Forest';
 
 const ENV_COMPONENTS: Partial<Record<EnvironmentId, () => JSX.Element>> = {
   studio: Studio,
   bedroom: Bedroom,
+  forest: Forest,
 };
 
 export function EnvironmentRenderer(): JSX.Element {
