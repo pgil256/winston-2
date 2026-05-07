@@ -44,7 +44,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 ## Environments
 
 - [x] Studio environment (default)
-- [ ] Bedroom environment
+- [x] Bedroom environment
 - [ ] Forest environment
 - [ ] Space environment
 - [ ] Beach environment (with animated ocean)
