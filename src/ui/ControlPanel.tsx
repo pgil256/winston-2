@@ -7,6 +7,8 @@ import {
   BODY_OPTIONS,
   FEET_OPTIONS,
 } from '../accessories/types';
+import { PRESET_IDS, PRESET_LABELS, getPresetPose } from '../rig/presets';
+import { startPoseLerp } from '../rig/poseAnimation';
 
 const envOptions = Object.fromEntries(
   ENVIRONMENT_IDS.map((id) => [ENVIRONMENT_LABELS[id], id]),
@@ -19,18 +21,12 @@ export function ControlPanel(): null {
   const setBody = useAppStore((s) => s.setBody);
   const setFeet = useAppStore((s) => s.setFeet);
   const resetAll = useAppStore((s) => s.resetAll);
-  const resetPose = useAppStore((s) => s.resetPose);
 
-  useControls('Pose Presets', {
-    'T-pose': button(() => resetPose()),
-    sit: button(() => {
-      // wired in a later task
-    }),
-    stand: button(() => {}),
-    pounce: button(() => {}),
-    sleep: button(() => {}),
-    'war-dance': button(() => {}),
-  });
+  const presetButtons: Record<string, ReturnType<typeof button>> = {};
+  for (const id of PRESET_IDS) {
+    presetButtons[PRESET_LABELS[id]] = button(() => startPoseLerp(getPresetPose(id)));
+  }
+  useControls('Pose Presets', presetButtons);
 
   useControls('Manual Pose', {
     Head: folder({}, { collapsed: true }),
