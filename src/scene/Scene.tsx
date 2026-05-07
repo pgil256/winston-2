@@ -1,21 +1,14 @@
 import { Lights } from './Lights';
 import { GroundPlane } from './GroundPlane';
+import { Bone } from '../rig/Bone';
+import { ROOT_BONE } from '../rig/skeleton';
 
 export function Scene(): JSX.Element {
   return (
     <>
       <Lights />
       <GroundPlane />
-      <PlaceholderFerret />
+      <Bone boneId={ROOT_BONE} />
     </>
-  );
-}
-
-function PlaceholderFerret(): JSX.Element {
-  return (
-    <mesh position={[0, 0.5, 0]} castShadow>
-      <boxGeometry args={[0.6, 0.6, 1.2]} />
-      <meshStandardMaterial color="#8a6a4a" />
-    </mesh>
   );
 }
