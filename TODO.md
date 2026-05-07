@@ -43,7 +43,7 @@ feature visible/interactive. Tick the box only after verifying in-browser.
 
 ## Environments
 
-- [ ] Studio environment (default)
+- [x] Studio environment (default)
 - [ ] Bedroom environment
 - [ ] Forest environment
 - [ ] Space environment

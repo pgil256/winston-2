@@ -12,7 +12,6 @@ export function App(): JSX.Element {
         camera={{ position: [1.4, 0.7, 1.6], fov: 45, near: 0.05, far: 50 }}
         gl={{ antialias: true }}
       >
-        <color attach="background" args={['#1a1a1a']} />
         <Scene />
         <OrbitControls
           enableDamping
