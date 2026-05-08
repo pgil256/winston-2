@@ -33,6 +33,7 @@ describe('wardrobe registry', () => {
 
   it('finds items by id and slot', () => {
     expect(getWardrobeItem('top-hat')?.label).toBe('Top Hat');
+    expect(getWardrobeItem('scarf')?.label).toBe('Scarf');
     expect(itemsForSlot('head').map((item) => item.id)).toContain('top-hat');
     expect(itemsForSlot('neck').map((item) => item.id)).toContain('scarf');
   });
