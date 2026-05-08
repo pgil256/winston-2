@@ -1,89 +1,69 @@
-import { useMemo, useRef, useEffect, useState } from 'react';
-import * as THREE from 'three';
 import { FerretModel } from './FerretModel';
 import { AccessoryAt } from '../accessories/AccessoryAt';
 
-// Anchor offsets are tuned visually against the Poly Google ferret model after
-// it's been normalised to fit a ~0.6 unit footprint with feet on y=0. Updated
-// in `useAnchorOffsets` once the model loads (bbox-based fallback). Defaults
-// are sensible static values.
-interface AnchorOffsets {
-  head: [number, number, number];
-  neck: [number, number, number];
-  body: [number, number, number];
-  pawL: [number, number, number];
-  pawR: [number, number, number];
-  footL: [number, number, number];
-  footR: [number, number, number];
-}
-
-const DEFAULT_OFFSETS: AnchorOffsets = {
-  head: [0, 0.21, 0.32],
-  neck: [0, 0.18, 0.24],
-  body: [0, 0.12, 0.0],
-  pawL: [0.06, 0.04, 0.22],
-  pawR: [-0.06, 0.04, 0.22],
-  footL: [0.07, 0.04, -0.18],
-  footR: [-0.07, 0.04, -0.18],
+// Known bounding box of public/models/ferret.glb (Poly by Google).
+// Authored coords: Y up, ferret stands on Y=0, head extends toward +Z, tail toward -Z.
+// Re-measured by inspecting the glTF POSITION accessor.
+const MODEL_BBOX = {
+  min: [-0.517, -0.019, -2.593] as const,
+  max: [0.517, 2.11, 1.821] as const,
 };
 
+// Target body length in scene units (head-to-tail-tip ≈ 0.6).
+const TARGET_LENGTH = 0.6;
+const SOURCE_LENGTH = MODEL_BBOX.max[2] - MODEL_BBOX.min[2];
+const SCALE = TARGET_LENGTH / SOURCE_LENGTH;
+
+// After scaling: centre on X, sit on Y=0, centre on Z.
+const SCALED_CX = ((MODEL_BBOX.min[0] + MODEL_BBOX.max[0]) / 2) * SCALE;
+const SCALED_CZ = ((MODEL_BBOX.min[2] + MODEL_BBOX.max[2]) / 2) * SCALE;
+const MODEL_OFFSET: [number, number, number] = [
+  -SCALED_CX,
+  -MODEL_BBOX.min[1] * SCALE,
+  -SCALED_CZ,
+];
+
+// Scaled extents (world-space, after MODEL_OFFSET applied):
+const EX = (MODEL_BBOX.max[0] - MODEL_BBOX.min[0]) * SCALE * 0.5; // half-width
+const EY = (MODEL_BBOX.max[1] - MODEL_BBOX.min[1]) * SCALE; // height
+const EZ_FRONT = MODEL_BBOX.max[2] * SCALE - SCALED_CZ; // head extent
+const EZ_BACK = MODEL_BBOX.min[2] * SCALE - SCALED_CZ; // tail extent (negative)
+
+// Accessory anchors expressed as fractions of body extents, so re-tuning the
+// scale only requires updating MODEL_BBOX. Front of body = +Z, back = -Z.
+const HEAD_OFFSET: [number, number, number] = [0, EY * 0.85, EZ_FRONT * 0.85];
+const NECK_OFFSET: [number, number, number] = [0, EY * 0.70, EZ_FRONT * 0.55];
+const BODY_OFFSET: [number, number, number] = [0, EY * 0.55, EZ_FRONT * 0.05];
+const PAW_L: [number, number, number] = [+EX * 0.55, EY * 0.10, EZ_FRONT * 0.55];
+const PAW_R: [number, number, number] = [-EX * 0.55, EY * 0.10, EZ_FRONT * 0.55];
+const FOOT_L: [number, number, number] = [+EX * 0.55, EY * 0.10, EZ_BACK * 0.55];
+const FOOT_R: [number, number, number] = [-EX * 0.55, EY * 0.10, EZ_BACK * 0.55];
+
 export function FerretRig(): JSX.Element {
-  const groupRef = useRef<THREE.Group>(null);
-  const [bbox, setBbox] = useState<THREE.Box3 | null>(null);
-
-  useEffect(() => {
-    const id = window.requestAnimationFrame(() => {
-      if (!groupRef.current) return;
-      const box = new THREE.Box3().setFromObject(groupRef.current);
-      if (!box.isEmpty()) setBbox(box);
-    });
-    return () => window.cancelAnimationFrame(id);
-  }, []);
-
-  const { scale, modelOffset, offsets } = useMemo(() => {
-    if (!bbox) {
-      return { scale: 1, modelOffset: [0, 0, 0] as [number, number, number], offsets: DEFAULT_OFFSETS };
-    }
-    const size = new THREE.Vector3();
-    bbox.getSize(size);
-    // Normalise to ~0.6 unit body length (longest axis fits in 0.6 units).
-    const longest = Math.max(size.x, size.y, size.z);
-    const s = 0.6 / Math.max(longest, 0.001);
-    const center = new THREE.Vector3();
-    bbox.getCenter(center);
-    const off: [number, number, number] = [
-      -center.x * s,
-      -bbox.min.y * s,
-      -center.z * s,
-    ];
-    return { scale: s, modelOffset: off, offsets: DEFAULT_OFFSETS };
-  }, [bbox]);
-
   return (
     <group>
-      <group ref={groupRef} scale={scale} position={modelOffset}>
+      <group scale={SCALE} position={MODEL_OFFSET}>
         <FerretModel />
       </group>
-      {/* Accessory anchors at fixed model-local offsets */}
-      <group position={offsets.head}>
+      <group position={HEAD_OFFSET}>
         <AccessoryAt slot="head" bone="head" />
       </group>
-      <group position={offsets.neck}>
+      <group position={NECK_OFFSET}>
         <AccessoryAt slot="neck" bone="neck" />
       </group>
-      <group position={offsets.body}>
+      <group position={BODY_OFFSET}>
         <AccessoryAt slot="body" bone="spine_upper" />
       </group>
-      <group position={offsets.pawL}>
+      <group position={PAW_L}>
         <AccessoryAt slot="feet" bone="paw_L" />
       </group>
-      <group position={offsets.pawR}>
+      <group position={PAW_R}>
         <AccessoryAt slot="feet" bone="paw_R" />
       </group>
-      <group position={offsets.footL}>
+      <group position={FOOT_L}>
         <AccessoryAt slot="feet" bone="foot_L" />
       </group>
-      <group position={offsets.footR}>
+      <group position={FOOT_R}>
         <AccessoryAt slot="feet" bone="foot_R" />
       </group>
     </group>
