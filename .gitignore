@@ -9,3 +9,4 @@ dist-ssr
 .env.local
 *.log
 *.tsbuildinfo
+winston-actual.png
