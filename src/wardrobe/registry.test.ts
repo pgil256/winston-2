@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { WARDROBE_ANCHORS } from './anchors';
 import { allWardrobeItems, getWardrobeItem, itemsForSlot } from './registry';
 import { WARDROBE_SLOTS } from './types';
+
+const accessoryGlbs = import.meta.glob('../../public/models/accessories/*.glb', {
+  query: '?url',
+  import: 'default',
+});
+
+function hasPublicAccessoryGlb(assetPath: `/models/accessories/${string}.glb`): boolean {
+  const expected = `../../public${assetPath}`;
+  return Object.prototype.hasOwnProperty.call(accessoryGlbs, expected);
+}
 
 describe('wardrobe registry', () => {
   it('has unique ids', () => {
@@ -42,8 +50,7 @@ describe('wardrobe registry', () => {
     for (const item of allWardrobeItems) {
       if (item.kind !== 'glb') continue;
       expect(item.assetPath.startsWith('/models/accessories/')).toBe(true);
-      const diskPath = join(process.cwd(), 'public', item.assetPath.replace('/models/', 'models/'));
-      expect(existsSync(diskPath)).toBe(true);
+      expect(hasPublicAccessoryGlb(item.assetPath)).toBe(true);
     }
   });
 });
