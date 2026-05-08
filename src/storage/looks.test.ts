@@ -152,6 +152,49 @@ describe('looks storage', () => {
     });
   });
 
+  it('defaults invalid environment strings to studio during migration and load', () => {
+    const look = {
+      version: 1,
+      pose: zeroPose(),
+      accessories: defaultAccessories(),
+      environment: 'bogus',
+    };
+
+    expect(migrateLookToV2(look)).toMatchObject({
+      version: 2,
+      environment: 'studio',
+    });
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        bogusEnvironment: look,
+      }),
+    );
+    expect(loadLook('bogusEnvironment')?.environment).toBe('studio');
+  });
+
+  it('normalizes malformed v2 wardrobe slot values individually', () => {
+    const look = {
+      version: 2,
+      pose: zeroPose(),
+      wardrobe: { head: null, body: 42, back: 'star-cloak', feet: 'boots' },
+      environment: 'studio',
+    };
+
+    expect(migrateLookToV2(look)).toMatchObject({
+      version: 2,
+      wardrobe: {
+        head: 'none',
+        face: 'none',
+        neck: 'none',
+        body: 'none',
+        back: 'star-cloak',
+        feet: 'boots',
+      },
+    });
+  });
+
   it('loadLook safely normalizes malformed stored entries', () => {
     localStorage.setItem(
       STORAGE_KEY,

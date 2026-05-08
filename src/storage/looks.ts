@@ -1,7 +1,7 @@
 import type { BoneId, EulerXYZ, Pose } from '../rig/types';
 import { BONE_IDS, zeroPose } from '../rig/types';
 import type { Accessories } from '../accessories/types';
-import type { EnvironmentId } from '../environments/types';
+import { ENVIRONMENT_IDS, type EnvironmentId } from '../environments/types';
 import { defaultWardrobeSelection, type WardrobeSelection } from '../wardrobe/types';
 
 export interface LookV1 {
@@ -78,7 +78,23 @@ function normalizePose(value: unknown): Pose {
 }
 
 function normalizeEnvironment(value: unknown): EnvironmentId {
-  return typeof value === 'string' ? (value as EnvironmentId) : 'studio';
+  return typeof value === 'string' && ENVIRONMENT_IDS.includes(value as EnvironmentId)
+    ? (value as EnvironmentId)
+    : 'studio';
+}
+
+function normalizeWardrobeSelection(value: unknown): WardrobeSelection {
+  const defaults = defaultWardrobeSelection();
+  if (!isRecord(value)) return defaults;
+
+  return {
+    head: typeof value.head === 'string' ? value.head : defaults.head,
+    face: typeof value.face === 'string' ? value.face : defaults.face,
+    neck: typeof value.neck === 'string' ? value.neck : defaults.neck,
+    body: typeof value.body === 'string' ? value.body : defaults.body,
+    back: typeof value.back === 'string' ? value.back : defaults.back,
+    feet: typeof value.feet === 'string' ? value.feet : defaults.feet,
+  };
 }
 
 function readAll(): Record<string, unknown> {
@@ -137,14 +153,10 @@ export function migrateLookToV2(look: unknown): LookV2 {
   }
 
   if (look.version === 2) {
-    const wardrobe = isRecord(look.wardrobe) ? look.wardrobe : {};
     return {
       version: 2,
       pose: normalizePose(look.pose),
-      wardrobe: {
-        ...defaultWardrobeSelection(),
-        ...wardrobe,
-      },
+      wardrobe: normalizeWardrobeSelection(look.wardrobe),
       environment: normalizeEnvironment(look.environment),
     };
   }
