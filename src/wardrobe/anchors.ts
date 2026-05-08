@@ -5,6 +5,8 @@ export interface AnchorTransform {
   readonly rotation: readonly [number, number, number];
 }
 
+type NonEmptyAnchors = readonly [WardrobeAnchor, ...WardrobeAnchor[]];
+
 // Scene-space points derived from public/models/ferret.glb with current scale:
 // source bbox [-0.5173,-0.01863,-2.59349] to [0.5173,2.11011,1.82064],
 // scale 0.135927 for a 0.6 scene-unit body length.
@@ -20,7 +22,7 @@ export const WARDROBE_ANCHORS: Readonly<Record<WardrobeAnchor, AnchorTransform>>
   rearFootR: { position: [-0.0666, 0.019, -0.046], rotation: [0, 0, 0] },
 };
 
-export const SLOT_ANCHORS: Readonly<Record<WardrobeSlot, readonly WardrobeAnchor[]>> = {
+export const SLOT_ANCHORS: Readonly<Record<WardrobeSlot, NonEmptyAnchors>> = {
   head: ['headCrown'],
   face: ['faceBridge'],
   neck: ['chestFront'],
