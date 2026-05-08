@@ -1,7 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { useAppStore } from './appStore';
-import { BONE_IDS } from '../rig/types';
+import { BONE_IDS, zeroPose } from '../rig/types';
 import { CONSTRAINTS } from '../rig/constraints';
+import type { Look } from '../storage/looks';
 
 describe('useAppStore', () => {
   beforeEach(() => {
@@ -85,6 +86,55 @@ describe('useAppStore', () => {
     ]);
   });
 
+  it('setWardrobeItem keeps legacy accessories synchronized', () => {
+    const s = useAppStore.getState();
+    s.setWardrobeItem('head', 'top-hat');
+    s.setWardrobeItem('neck', 'scarf');
+    s.setWardrobeItem('body', 'sweater');
+    s.setWardrobeItem('feet', 'boots');
+    expect(useAppStore.getState().accessories).toEqual({
+      head: 'top',
+      neck: 'scarf',
+      body: 'sweater',
+      feet: 'boots',
+    });
+  });
+
+  it('clearWardrobeSlot and resetWardrobe keep legacy accessories synchronized', () => {
+    const s = useAppStore.getState();
+    s.setHat('top');
+    s.setFeet('boots');
+    s.clearWardrobeSlot('head');
+    expect(useAppStore.getState().accessories.head).toBe('none');
+    expect(useAppStore.getState().accessories.feet).toBe('boots');
+
+    s.resetWardrobe();
+    expect(useAppStore.getState().accessories).toEqual({
+      head: 'none',
+      neck: 'none',
+      body: 'none',
+      feet: 'none',
+    });
+  });
+
+  it('randomizeWardrobe keeps legacy accessories synchronized', () => {
+    const originalRandom = Math.random;
+    const randomValues = [0.99, 0, 0.99, 0.99, 0, 0.99];
+    Math.random = () => randomValues.shift() ?? 0;
+    try {
+      useAppStore.getState().randomizeWardrobe();
+      const state = useAppStore.getState();
+      expect(state.accessories).toEqual({
+        head: 'cowboy',
+        neck: 'scarf',
+        body: 'tutu',
+        feet: 'boots',
+      });
+    } finally {
+      Math.random = originalRandom;
+    }
+  });
+
   it('setEnvironment switches the active environment', () => {
     useAppStore.getState().setEnvironment('forest');
     expect(useAppStore.getState().environment).toBe('forest');
@@ -117,5 +167,20 @@ describe('useAppStore', () => {
     expect(next.accessories.head).toBe('none');
     expect(next.environment).toBe('studio');
     expect(next.pose.tail_2).toEqual([0, 0, 0]);
+  });
+
+  it('applyLook fills missing pose entries with zero rotations', () => {
+    const partialLook = {
+      version: 2,
+      pose: { head: [0.1, 0.2, 0.3] },
+      wardrobe: { head: 'top-hat' },
+      environment: 'studio',
+    };
+
+    expect(() => useAppStore.getState().applyLook(partialLook as unknown as Look)).not.toThrow();
+    const { pose, accessories } = useAppStore.getState();
+    expect(pose.head).toEqual([0.1, 0.2, 0.3]);
+    expect(pose.tail_1).toEqual(zeroPose().tail_1);
+    expect(accessories.head).toBe('top');
   });
 });

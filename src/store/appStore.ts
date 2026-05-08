@@ -66,12 +66,45 @@ const FEET_ID_MAP: Record<FeetId, WardrobeSelection['feet']> = {
   boots: 'boots',
 };
 
+const LEGACY_HAT_ID_MAP: Record<string, HatId> = {
+  none: 'none',
+  'top-hat': 'top',
+  'party-hat': 'party',
+  'witch-hat': 'witch',
+  'cowboy-hat': 'cowboy',
+};
+
+const LEGACY_NECK_ID_MAP: Record<string, NeckId> = {
+  none: 'none',
+  bowtie: 'bowtie',
+  collar: 'collar',
+  scarf: 'scarf',
+};
+
+const LEGACY_BODY_ID_MAP: Record<string, BodyId> = {
+  none: 'none',
+  sweater: 'sweater',
+  tutu: 'tutu',
+};
+
+const LEGACY_BACK_ID_MAP: Record<string, BodyId> = {
+  none: 'none',
+  cape: 'cape',
+};
+
+const LEGACY_FEET_ID_MAP: Record<string, FeetId> = {
+  none: 'none',
+  socks: 'socks',
+  boots: 'boots',
+};
+
 function legacyAccessoriesFromWardrobe(wardrobe: WardrobeSelection): Accessories {
+  const backBody = LEGACY_BACK_ID_MAP[wardrobe.back];
   return {
-    head: wardrobe.head === 'top-hat' ? 'top' : wardrobe.head === 'party-hat' ? 'party' : wardrobe.head === 'witch-hat' ? 'witch' : wardrobe.head === 'cowboy-hat' ? 'cowboy' : 'none',
-    neck: wardrobe.neck === 'bowtie' || wardrobe.neck === 'collar' || wardrobe.neck === 'scarf' ? wardrobe.neck : 'none',
-    body: wardrobe.back === 'cape' ? 'cape' : wardrobe.body === 'sweater' ? 'sweater' : wardrobe.body === 'tutu' ? 'tutu' : 'none',
-    feet: wardrobe.feet === 'socks' || wardrobe.feet === 'boots' ? wardrobe.feet : 'none',
+    head: LEGACY_HAT_ID_MAP[wardrobe.head] ?? 'none',
+    neck: LEGACY_NECK_ID_MAP[wardrobe.neck] ?? 'none',
+    body: backBody && backBody !== 'none' ? backBody : LEGACY_BODY_ID_MAP[wardrobe.body] ?? 'none',
+    feet: LEGACY_FEET_ID_MAP[wardrobe.feet] ?? 'none',
   };
 }
 
@@ -116,12 +149,24 @@ export const useAppStore = create<AppState>((set) => ({
   resetAccessories: () => set({ accessories: defaultAccessories(), wardrobe: defaultWardrobeSelection() }),
 
   setWardrobeItem: (slot, id) =>
-    set((s) => ({ wardrobe: { ...s.wardrobe, [slot]: id } })),
+    set((s) => {
+      const wardrobe = { ...s.wardrobe, [slot]: id };
+      return {
+        accessories: legacyAccessoriesFromWardrobe(wardrobe),
+        wardrobe,
+      };
+    }),
 
   clearWardrobeSlot: (slot) =>
-    set((s) => ({ wardrobe: { ...s.wardrobe, [slot]: 'none' } })),
+    set((s) => {
+      const wardrobe = { ...s.wardrobe, [slot]: 'none' };
+      return {
+        accessories: legacyAccessoriesFromWardrobe(wardrobe),
+        wardrobe,
+      };
+    }),
 
-  resetWardrobe: () => set({ wardrobe: defaultWardrobeSelection() }),
+  resetWardrobe: () => set({ accessories: defaultAccessories(), wardrobe: defaultWardrobeSelection() }),
 
   randomizeWardrobe: () =>
     set(() => {
@@ -130,7 +175,10 @@ export const useAppStore = create<AppState>((set) => ({
         const candidates = ['none', ...itemsForSlot(slot).map((item) => item.id)];
         wardrobe[slot] = candidates[Math.floor(Math.random() * candidates.length)] ?? 'none';
       }
-      return { wardrobe };
+      return {
+        accessories: legacyAccessoriesFromWardrobe(wardrobe),
+        wardrobe,
+      };
     }),
 
   setEnvironment: (id) => set({ environment: id }),
@@ -138,7 +186,8 @@ export const useAppStore = create<AppState>((set) => ({
   applyLook: (look) => {
     const migrated = migrateLookToV2(look);
     const clamped = {} as Pose;
-    for (const id of BONE_IDS) clamped[id] = clampRotation(id, migrated.pose[id]);
+    const fallbackPose = zeroPose();
+    for (const id of BONE_IDS) clamped[id] = clampRotation(id, migrated.pose?.[id] ?? fallbackPose[id]);
     set({
       pose: clamped,
       accessories: legacyAccessoriesFromWardrobe(migrated.wardrobe),

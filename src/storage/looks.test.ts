@@ -3,6 +3,8 @@ import { saveLook, loadLook, listLooks, deleteLook, migrateLookToV2, type Look, 
 import { zeroPose } from '../rig/types';
 import { defaultAccessories } from '../accessories/types';
 
+const STORAGE_KEY = 'winston2:looks';
+
 class MemoryStorage {
   private data = new Map<string, string>();
   getItem(k: string): string | null {
@@ -107,5 +109,72 @@ describe('looks storage', () => {
     };
 
     expect(migrateLookToV2(look)).toEqual(look);
+  });
+
+  it('defaults malformed v1 accessories to empty wardrobe slots', () => {
+    const look = {
+      version: 1,
+      pose: zeroPose(),
+      environment: 'studio',
+    };
+
+    expect(migrateLookToV2(look as unknown as Look)).toMatchObject({
+      version: 2,
+      wardrobe: {
+        head: 'none',
+        face: 'none',
+        neck: 'none',
+        body: 'none',
+        back: 'none',
+        feet: 'none',
+      },
+    });
+  });
+
+  it('merges malformed v2 wardrobe data with default slots', () => {
+    const look = {
+      version: 2,
+      pose: zeroPose(),
+      wardrobe: { head: 'crown', feet: 'boots' },
+      environment: 'studio',
+    };
+
+    expect(migrateLookToV2(look as unknown as Look)).toMatchObject({
+      version: 2,
+      wardrobe: {
+        head: 'crown',
+        face: 'none',
+        neck: 'none',
+        body: 'none',
+        back: 'none',
+        feet: 'boots',
+      },
+    });
+  });
+
+  it('loadLook safely normalizes malformed stored entries', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        broken: {
+          version: 1,
+          environment: 'forest',
+        },
+      }),
+    );
+
+    expect(() => loadLook('broken')).not.toThrow();
+    expect(loadLook('broken')).toMatchObject({
+      version: 2,
+      wardrobe: {
+        head: 'none',
+        face: 'none',
+        neck: 'none',
+        body: 'none',
+        back: 'none',
+        feet: 'none',
+      },
+      environment: 'forest',
+    });
   });
 });
