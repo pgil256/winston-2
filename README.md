@@ -1,7 +1,8 @@
 # Winston 2.0
 
-A browser-based 3D ferret dress-up app. Procedural geometry, rigged skeleton,
-pose presets + manual control, swappable accessories, swappable environments.
+A browser-based 3D ferret dress-up app. The ferret itself is a Creative
+Commons-licensed model from Poly by Google; everything around it — accessories,
+environments, lighting, and UI — is procedural.
 
 ## Quick start
 
@@ -22,8 +23,6 @@ The control panel (top-right, expandable) groups every control into folders:
 
 | Folder | Purpose |
 | --- | --- |
-| **Pose Presets** | One-click poses (T-pose, Stand, Sit, Pounce, Sleep, War-dance). Each one animates over 400ms. |
-| **Manual Pose** | Per-bone X/Y/Z rotation sliders, grouped by Head, Spine, Arms, Legs, Tail. Slider ranges are clamped to anatomically plausible angles. The sliders mirror the pose live, so they update when a preset is applied. |
 | **Dress Up** | Four dropdowns for swappable accessories: a hat (top/party/witch/cowboy), a neck piece (bowtie/collar+bell/scarf), a body piece (sweater/cape/tutu), and feet wear (socks ×4 / boots ×4). |
 | **Environment** | Picks the surrounding scene: studio, bedroom, forest, space, beach, lab. |
 | **Save / Load Look** | Type a name and **Save** the current pose, accessories, and environment to `localStorage`. **Load** restores by name. **Reset** clears everything to T-pose / no accessories / studio. |
@@ -62,7 +61,17 @@ src/
 
 ## Notes
 
-Pose updates are mutated onto bone refs each frame inside `useFrame` — there
-are no per-frame React re-renders during preset lerps. Bone rotations are
-clamped through `clampRotation` on every store write, so manual edits, presets,
-and loaded looks all stay inside the constraint envelope.
+The ferret is a single static glTF mesh (no skeleton), so pose presets and
+manual rotation sliders are not exposed in v1. Accessories anchor to fixed
+offsets relative to the model. The procedural rig code (bone hierarchy,
+constraints, presets, lerp animation) is still present in `src/rig/` and
+remains tested — it's available for a future iteration that swaps in a rigged
+ferret.
+
+## Credits
+
+The ferret model is **"Ferret"** by **Poly by Google**, originally distributed
+on Google Poly and now archived at
+[poly.pizza/m/4I1SBFHWuSo](https://poly.pizza/m/4I1SBFHWuSo). Licensed under
+[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). See
+`public/models/CREDITS.md` for full attribution.
