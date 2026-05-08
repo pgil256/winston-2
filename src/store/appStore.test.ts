@@ -21,6 +21,17 @@ describe('useAppStore', () => {
     expect(environment).toBe('studio');
   });
 
+  it('initializes with an empty wardrobe selection', () => {
+    expect(useAppStore.getState().wardrobe).toEqual({
+      head: 'none',
+      face: 'none',
+      neck: 'none',
+      body: 'none',
+      back: 'none',
+      feet: 'none',
+    });
+  });
+
   it('setBoneRotation updates only the targeted bone', () => {
     useAppStore.getState().setBoneRotation('head', [0.1, 0.2, 0.3]);
     const { pose } = useAppStore.getState();
@@ -40,6 +51,38 @@ describe('useAppStore', () => {
       body: 'cape',
       feet: 'boots',
     });
+  });
+
+  it('setWardrobeItem updates only one wardrobe slot', () => {
+    const s = useAppStore.getState();
+    s.setWardrobeItem('head', 'wizard-hat');
+    s.setWardrobeItem('face', 'sunglasses');
+    expect(useAppStore.getState().wardrobe).toEqual({
+      head: 'wizard-hat',
+      face: 'sunglasses',
+      neck: 'none',
+      body: 'none',
+      back: 'none',
+      feet: 'none',
+    });
+  });
+
+  it('clearWardrobeSlot and resetWardrobe clear wardrobe state', () => {
+    const s = useAppStore.getState();
+    s.setWardrobeItem('head', 'wizard-hat');
+    s.setWardrobeItem('feet', 'boots');
+    s.clearWardrobeSlot('head');
+    expect(useAppStore.getState().wardrobe.head).toBe('none');
+    expect(useAppStore.getState().wardrobe.feet).toBe('boots');
+    s.resetWardrobe();
+    expect(Object.values(useAppStore.getState().wardrobe)).toEqual([
+      'none',
+      'none',
+      'none',
+      'none',
+      'none',
+      'none',
+    ]);
   });
 
   it('setEnvironment switches the active environment', () => {

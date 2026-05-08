@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { saveLook, loadLook, listLooks, deleteLook, type Look } from './looks';
+import { saveLook, loadLook, listLooks, deleteLook, migrateLookToV2, type Look, type LookV1, type LookV2 } from './looks';
 import { zeroPose } from '../rig/types';
 import { defaultAccessories } from '../accessories/types';
 
@@ -42,7 +42,7 @@ describe('looks storage', () => {
   it('round-trips a saved look', () => {
     const look = aLook();
     saveLook('alpha', look);
-    expect(loadLook('alpha')).toEqual(look);
+    expect(loadLook('alpha')).toEqual(migrateLookToV2(look));
   });
 
   it('returns null for unknown names', () => {
@@ -67,5 +67,45 @@ describe('looks storage', () => {
     saveLook('   ', aLook());
     expect(listLooks()).toEqual([]);
     expect(loadLook('   ')).toBeNull();
+  });
+
+  it('migrates a v1 look into expanded wardrobe slots', () => {
+    const oldLook: LookV1 = {
+      version: 1,
+      pose: zeroPose(),
+      accessories: { head: 'witch', neck: 'scarf', body: 'cape', feet: 'boots' },
+      environment: 'forest',
+    };
+
+    expect(migrateLookToV2(oldLook)).toMatchObject({
+      version: 2,
+      wardrobe: {
+        head: 'witch-hat',
+        face: 'none',
+        neck: 'scarf',
+        body: 'none',
+        back: 'cape',
+        feet: 'boots',
+      },
+      environment: 'forest',
+    });
+  });
+
+  it('keeps v2 looks stable when migrating', () => {
+    const look: LookV2 = {
+      version: 2,
+      pose: zeroPose(),
+      wardrobe: {
+        head: 'crown',
+        face: 'sunglasses',
+        neck: 'none',
+        body: 'tutu',
+        back: 'cape',
+        feet: 'boots',
+      },
+      environment: 'studio',
+    };
+
+    expect(migrateLookToV2(look)).toEqual(look);
   });
 });
