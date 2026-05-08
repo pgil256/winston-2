@@ -10,3 +10,7 @@ dist-ssr
 *.log
 *.tsbuildinfo
 winston-actual.png
+winston-*.png
+snap.md
+.playwright-mcp/
+.vercel
