@@ -3,6 +3,15 @@ import { useAppStore } from './appStore';
 import { BONE_IDS, zeroPose } from '../rig/types';
 import { CONSTRAINTS } from '../rig/constraints';
 import type { Look } from '../storage/looks';
+import { itemsForSlot } from '../wardrobe/registry';
+import type { WardrobeSlot } from '../wardrobe/types';
+
+function randomValueForWardrobeItem(slot: WardrobeSlot, id: string): number {
+  const candidates = ['none', ...itemsForSlot(slot).map((item) => item.id)];
+  const index = candidates.indexOf(id);
+  expect(index).toBeGreaterThan(0);
+  return (index + 0.1) / candidates.length;
+}
 
 describe('useAppStore', () => {
   beforeEach(() => {
@@ -119,7 +128,14 @@ describe('useAppStore', () => {
 
   it('randomizeWardrobe keeps legacy accessories synchronized', () => {
     const originalRandom = Math.random;
-    const randomValues = [0.99, 0, 0.99, 0.99, 0, 0.99];
+    const randomValues = [
+      randomValueForWardrobeItem('head', 'cowboy-hat'),
+      0,
+      randomValueForWardrobeItem('neck', 'scarf'),
+      randomValueForWardrobeItem('body', 'tutu'),
+      0,
+      randomValueForWardrobeItem('feet', 'boots'),
+    ];
     Math.random = () => randomValues.shift() ?? 0;
     try {
       useAppStore.getState().randomizeWardrobe();

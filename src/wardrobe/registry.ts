@@ -6,6 +6,33 @@ const CUSTOM_SOURCE = {
   license: 'Custom',
 } as const;
 
+const KHRONOS_SAMPLE_SOURCES = {
+  boxVertexColors: {
+    name: 'Khronos glTF Sample Assets - Box Vertex Colors',
+    url: 'https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/BoxVertexColors',
+    license: 'CC0',
+    attribution: 'Marco Hutter for Everything',
+  },
+  compareClearcoat: {
+    name: 'Khronos glTF Sample Assets - Compare Clearcoat',
+    url: 'https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CompareClearcoat',
+    license: 'CC0',
+    attribution: 'Eric Chadwick and DGG for Everything',
+  },
+  clearcoatWicker: {
+    name: 'Khronos glTF Sample Assets - Clearcoat Wicker',
+    url: 'https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/ClearcoatWicker',
+    license: 'CC0',
+    attribution: 'Eric Chadwick for Everything',
+  },
+  interpolationTest: {
+    name: 'Khronos glTF Sample Assets - Interpolation Test',
+    url: 'https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/InterpolationTest',
+    license: 'CC0',
+    attribution: 'Khronos for Everything',
+  },
+} as const;
+
 export const allWardrobeItems: readonly WardrobeItem[] = [
   {
     id: 'top-hat',
@@ -78,6 +105,16 @@ export const allWardrobeItems: readonly WardrobeItem[] = [
     tags: ['pirate', 'adventure'],
   },
   {
+    id: 'sample-motion-cube',
+    label: 'Motion Cube',
+    slot: 'head',
+    kind: 'glb',
+    assetPath: '/models/accessories/sample-motion-cube.glb',
+    source: KHRONOS_SAMPLE_SOURCES.interpolationTest,
+    transform: { anchor: 'headCrown', position: [0, -0.035, -0.005], rotation: [0, 0, 0], scale: 0.012 },
+    tags: ['playful', 'glb'],
+  },
+  {
     id: 'sunglasses',
     label: 'Sunglasses',
     slot: 'face',
@@ -128,6 +165,16 @@ export const allWardrobeItems: readonly WardrobeItem[] = [
     tags: ['cozy', 'pet-fashion'],
   },
   {
+    id: 'sample-wicker-orb',
+    label: 'Wicker Charm',
+    slot: 'neck',
+    kind: 'glb',
+    assetPath: '/models/accessories/sample-wicker-orb.glb',
+    source: KHRONOS_SAMPLE_SOURCES.clearcoatWicker,
+    transform: { anchor: 'chestFront', position: [0, -0.035, 0.01], rotation: [0, 0, 0], scale: 0.055 },
+    tags: ['charm', 'glb'],
+  },
+  {
     id: 'sweater',
     label: 'Sweater',
     slot: 'body',
@@ -146,6 +193,16 @@ export const allWardrobeItems: readonly WardrobeItem[] = [
     source: CUSTOM_SOURCE,
     transform: { anchor: 'waist', position: [0, 0, 0], rotation: [0, 0, 0], scale: 0.42 },
     tags: ['dance', 'playful'],
+  },
+  {
+    id: 'sample-toy-block',
+    label: 'Toy Block',
+    slot: 'body',
+    kind: 'glb',
+    assetPath: '/models/accessories/sample-toy-block.glb',
+    source: KHRONOS_SAMPLE_SOURCES.boxVertexColors,
+    transform: { anchor: 'waist', position: [-0.035, -0.02, 0.05], rotation: [0, 0, 0], scale: 0.06 },
+    tags: ['toy', 'glb'],
   },
   {
     id: 'cape',
@@ -176,6 +233,16 @@ export const allWardrobeItems: readonly WardrobeItem[] = [
     source: CUSTOM_SOURCE,
     transform: { anchor: 'upperBack', position: [0, 0, 0], rotation: [0, 0, 0], scale: 0.75 },
     tags: ['adventure', 'space'],
+  },
+  {
+    id: 'sample-clearcoat-tiles',
+    label: 'Clearcoat Tiles',
+    slot: 'back',
+    kind: 'glb',
+    assetPath: '/models/accessories/sample-clearcoat-tiles.glb',
+    source: KHRONOS_SAMPLE_SOURCES.compareClearcoat,
+    transform: { anchor: 'upperBack', position: [0, -0.01, -0.025], rotation: [0, 0, 0], scale: 0.045 },
+    tags: ['shiny', 'glb'],
   },
   {
     id: 'socks',
