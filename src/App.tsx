@@ -3,6 +3,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Leva } from 'leva';
 import { Scene } from './scene/Scene';
 import { ControlPanel } from './ui/ControlPanel';
+import { WardrobePanel } from './ui/WardrobePanel';
 import { CanvasErrorBoundary } from './ui/CanvasErrorBoundary';
 import { useAppStore } from './store/appStore';
 
@@ -40,6 +41,7 @@ export function App(): JSX.Element {
       </CanvasErrorBoundary>
       <Leva collapsed={false} />
       <ControlPanel />
+      <WardrobePanel />
       <BottomLeftCorner />
     </div>
   );
