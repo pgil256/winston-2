@@ -1,8 +1,8 @@
 # Winston 2.0
 
 A browser-based 3D ferret dress-up app. The ferret itself is a Creative
-Commons-licensed model from Poly by Google; everything around it — accessories,
-environments, lighting, and UI — is procedural.
+Commons-licensed model from Poly by Google; the wardrobe mixes procedural
+pieces with a small set of credited CC0 GLB accessories.
 
 ## Quick start
 
@@ -19,13 +19,13 @@ Other scripts:
 
 ## Controls
 
-The control panel (top-right, expandable) groups every control into folders:
+The main wardrobe panel (top-left) provides the player-facing outfit controls:
 
-| Folder | Purpose |
+| Control | Purpose |
 | --- | --- |
-| **Dress Up** | Four dropdowns for swappable accessories: a hat (top/party/witch/cowboy), a neck piece (bowtie/collar+bell/scarf), a body piece (sweater/cape/tutu), and feet wear (socks ×4 / boots ×4). |
+| **Wardrobe** | Six slot tabs for Head, Face, Neck, Body, Back, and Feet. Pick item tiles, clear a slot, reset the outfit, randomize, and save/load named looks. |
 | **Environment** | Picks the surrounding scene: studio, bedroom, forest, space, beach, lab. |
-| **Save / Load Look** | Type a name and **Save** the current pose, accessories, and environment to `localStorage`. **Load** restores by name. **Reset** clears everything to T-pose / no accessories / studio. |
+| **Save / Load Look** | Type a name and **Save** the current pose, wardrobe, and environment to `localStorage`. **Load** restores by name. **Reset Outfit** clears the wardrobe. |
 
 Other UI:
 
@@ -40,9 +40,9 @@ Other UI:
 - zustand (app state)
 - vitest (tests)
 
-No backend; saved looks live in `localStorage` only. All ferret geometry,
-hats, environments, and the procedural fur normal map are generated in code —
-no external 3D assets.
+No backend; saved looks live in `localStorage` only. The base ferret GLB and
+credited wardrobe GLBs live under `public/models/`; procedural accessories,
+environments, and the fur normal map are generated in code.
 
 ## Project layout
 
@@ -50,23 +50,25 @@ no external 3D assets.
 src/
   rig/           bone hierarchy, constraints, presets, lerp animation, <Bone>
   ferret/        per-bone palette and procedural fur normal map
-  accessories/   hats, neck pieces, body pieces, feet wear, anchor wiring
+  accessories/   legacy procedural hats, neck pieces, body pieces, feet wear
   environments/  studio, bedroom, forest, space, beach, lab
   scene/         top-level <Scene>
-  store/         zustand store with pose / accessories / environment slices
+  store/         zustand store with pose / wardrobe / environment slices
   storage/       named-look persistence to localStorage
-  ui/            leva control panel
-  App.tsx        Canvas, OrbitControls, Leva, BottomLeftCorner
+  wardrobe/      wardrobe slots, anchors, registry, procedural/GLB renderer
+  ui/            wardrobe panel and environment control panel
+  App.tsx        Canvas, OrbitControls, Leva, WardrobePanel, BottomLeftCorner
 ```
 
 ## Notes
 
 The ferret is a single static glTF mesh (no skeleton), so pose presets and
-manual rotation sliders are not exposed in v1. Accessories anchor to fixed
-offsets relative to the model. The procedural rig code (bone hierarchy,
-constraints, presets, lerp animation) is still present in `src/rig/` and
-remains tested — it's available for a future iteration that swaps in a rigged
-ferret.
+manual rotation sliders are not exposed in the app. Wardrobe items are placed
+on measured anchors around the static model; GLB accessories use per-item
+transforms while procedural pieces render directly in React Three Fiber. The
+procedural rig code (bone hierarchy, constraints, presets, lerp animation) is
+still present in `src/rig/` and remains tested — it's available for a future
+iteration that swaps in a rigged ferret.
 
 ## Credits
 

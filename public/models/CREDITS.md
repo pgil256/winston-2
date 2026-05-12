@@ -9,3 +9,5 @@
 
 This model is included unmodified. Attribution is also surfaced in the app
 README and the in-app credits.
+
+Additional wardrobe GLB credits live in `public/models/accessories/CREDITS.md`.
