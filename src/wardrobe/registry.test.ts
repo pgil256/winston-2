@@ -46,6 +46,13 @@ describe('wardrobe registry', () => {
     expect(itemsForSlot('neck').map((item) => item.id)).toContain('scarf');
   });
 
+  it('ships at least eighteen wardrobe items across the six slots', () => {
+    expect(allWardrobeItems.length).toBeGreaterThanOrEqual(18);
+    for (const slot of WARDROBE_SLOTS) {
+      expect(itemsForSlot(slot).length).toBeGreaterThan(0);
+    }
+  });
+
   it('keeps glb asset paths inside public/models/accessories', () => {
     for (const item of allWardrobeItems) {
       if (item.kind !== 'glb') continue;
